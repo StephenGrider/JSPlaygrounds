@@ -9,7 +9,7 @@ class Editor extends Component {
 
   render() {
     return (
-      <div>
+      <div className="col-xs-7">
         <CodeMirror
           value={this.props.code}
           onChange={this.onChange.bind(this)}

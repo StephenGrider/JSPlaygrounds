@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { transform } from 'babel-standalone';
-import CreateFragment from 'react-addons-create-fragment';
+import esprima from 'esprima';
 
-window.React = React;
-window.Component = React.Component;
+window.esprima = esprima;
 
 class Viewer extends Component {
   componentWillReceiveProps() {
@@ -12,19 +11,13 @@ class Viewer extends Component {
   }
 
   execute(code) {
-    let wrappedCode = `(function() {
-      return (${code});
-    })()`;
-    const transformed = transform(code, { presets: ['react', 'es2015'] }).code;
-    return eval(transformed.replace("'use strict';", ''));
-  }
+    // let wrappedCode = `(function() {
+    //   return (${code});
+    // })()`;
+    // const transformed = transform(code, { presets: ['es2015'] }).code;
 
-  renderResult(Result) {
-    if (Result.prototype && Result.prototype.render) {
-      return <div><Result /></div>
-    } else {
-      return <div>{Result}</div>
-    }
+    // return eval(transformed.replace('"use strict";', ''));
+    return eval(code);
   }
 
   results(code) {
@@ -35,7 +28,8 @@ class Viewer extends Component {
       const results = _.map(fragments, (fragment, index) => {
         try {
           const group = _.take(fragments, index + 1).join('');
-          return this.execute(group);
+          const result = this.prettyPrint(this.execute(group));
+          return { code: group, result };
         } catch (e) {
 
         }
@@ -51,9 +45,25 @@ class Viewer extends Component {
     }
   }
 
+  prettyPrint(result) {
+    if (_.isFunction(result) && result.name) {
+      return <i>Class {result.name}</i>;
+    } else if (_.isBoolean(result)) {
+      return result ? 'True' : 'False';
+    } else if (_.isObject(result)) {
+      return JSON.stringify(result);
+    }
+
+    return result;
+  }
+
+  renderResult({ code, result}) {
+    return <div key={code}>{result}</div>
+  }
+
   render() {
     return (
-      <div>
+      <div className="viewer col-xs-5">
         {_.memoize(() => this.results(this.props.code))()}
       </div>
     );
