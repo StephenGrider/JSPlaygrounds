@@ -7,12 +7,13 @@ window.React = React;
 window.Component = Component;
 window.esprima = esprima;
 
-const OPEN_DELIMITERS = [ '(', '{', '[' ];
-const CLOSE_DELIMITERS = [ ')', '}', ']' ];
+const OPEN_DELIMITERS = [ '(', '{', '[', '`' ];
+const CLOSE_DELIMITERS = [ ')', '}', ']', '`' ];
 const DELIMITER_MAP = {
   ')': '(',
   '}': '{',
-  ']': '['
+  ']': '[',
+  '`': '`'
 };
 
 class Viewer extends Component {
