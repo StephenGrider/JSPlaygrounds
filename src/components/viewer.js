@@ -3,68 +3,101 @@ import React, { Component } from 'react';
 import { transform } from 'babel-standalone';
 import esprima from 'esprima';
 
+window.React = React;
+window.Component = Component;
 window.esprima = esprima;
 
+const OPEN_DELIMITERS = [ '(', '{', '[' ];
+const CLOSE_DELIMITERS = [ ')', '}', ']' ];
+const DELIMITER_MAP = {
+  ')': '(',
+  '}': '{',
+  ']': '['
+};
+
 class Viewer extends Component {
-  componentWillReceiveProps() {
-    this.forceUpdate();
+  constructor(props) {
+    super(props);
+
+    // this.renderExpressions = _.memoize(code => this._renderExpressions(code, []));
   }
 
-  execute(code) {
-    // let wrappedCode = `(function() {
-    //   return (${code});
-    // })()`;
-    // const transformed = transform(code, { presets: ['es2015'] }).code;
-
-    // return eval(transformed.replace('"use strict";', ''));
-    return eval(code);
+  lineHasMoreDelimiters({ column }, lineContents) {
+    return _.intersection(_.takeRight(lineContents, lineContents.length - column), OPEN_DELIMITERS).length;
   }
 
-  results(code) {
-    const fragments = _.without(code.split('\n'), '');
+  buildExpressions(code) {
+    const transformedCode = JSXTransformer.transform(code).code;
+    const codeByLine = transformedCode.split('\n');
+    const tokenized = esprima.tokenize(transformedCode, { loc: true });
 
-    try {
-      this.execute(code);
-      const results = _.map(fragments, (fragment, index) => {
-        try {
-          const group = _.take(fragments, index + 1).join('');
-          const result = this.prettyPrint(this.execute(group));
-          return { code: group, result };
-        } catch (e) {
+    const parens = { '(': 0, '{': 0, '[': 0 };
+    let wasOpen = false;
+    const exp = _.reduce(tokenized, (expressions, { value, loc: { end } }, index) => {
+      const lineNumber = end.line;
+      const lineContents = codeByLine[lineNumber - 1];
+      const lineHasMoreDelimiters = this.lineHasMoreDelimiters(end, lineContents);
+      const endOfLine = end.column === lineContents.length;
 
-        }
-      });
+      if (expressions[lineNumber]) { return expressions; }
 
-      return _.chain(results)
-        .compact()
-        .without('use strict')
-        .map(this.renderResult.bind(this))
-        .value();
-    } catch (e) {
-      return e.toString();
-    }
+      if (OPEN_DELIMITERS.includes(value)) {
+        parens[value] += 1;
+        wasOpen = true;
+      }
+
+      if (CLOSE_DELIMITERS.includes(value)) {
+        parens[DELIMITER_MAP[value]] -= 1;
+      }
+
+      if (!lineHasMoreDelimiters && wasOpen && _.every(parens, count => count === 0)) {
+        wasOpen = false;
+        expressions[lineNumber] = _.take(codeByLine, lineNumber).join('\n');
+
+        return expressions;
+      }
+
+      if (!lineHasMoreDelimiters && _.every(parens, count => count === 0)) {
+        expressions[lineNumber] = _.take(codeByLine, lineNumber).join('\n');
+
+        return expressions;
+      }
+
+      return expressions;
+    }, {});
+
+    console.log(exp);
+    return exp;
   }
 
-  prettyPrint(result) {
-    if (_.isFunction(result) && result.name) {
-      return <i>Class {result.name}</i>;
-    } else if (_.isBoolean(result)) {
-      return result ? 'True' : 'False';
-    } else if (_.isObject(result)) {
-      return JSON.stringify(result);
-    }
+  evaluateExpressions(expressions) {
+    const exp = _.map(expressions, expression => {
+      const result = eval(expression);
 
-    return result;
+      if (result && result.type) {
+        return result;
+      } else if (_.isFunction(result) && result.name) {
+        return <i>Function {result.name}</i>;
+      } else if (_.isBoolean(result)) {
+        return result ? 'True' : 'False';
+      } else if (_.isObject(result)) {
+        return JSON.stringify(result);
+      }
+
+      return result;
+    });
+
+    return exp.map(e => <div>{e}</div>)
   }
 
-  renderResult({ code, result}) {
-    return <div key={code}>{result}</div>
+  renderExpressions(code) {
+    return this.evaluateExpressions(this.buildExpressions(code));
   }
 
   render() {
     return (
       <div className="viewer col-xs-5">
-        {_.memoize(() => this.results(this.props.code))()}
+        {this.renderExpressions(this.props.code)}
       </div>
     );
   }
