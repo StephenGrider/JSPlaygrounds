@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
 import CodeMirror from 'react-codemirror';
 import 'codemirror/mode/javascript/javascript';
+import * as actions from 'actions';
+import { connect } from 'react-redux';
 
 class Editor extends Component {
-  onChange(code) {
-    this.props.onChange(code);
+  onCodeChange(code) {
+    this.props.updateCode(code);
   }
 
   render() {
     return (
-      <div className="col-xs-7">
+      <div>
         <CodeMirror
           value={this.props.code}
-          onChange={this.onChange.bind(this)}
+          onChange={this.onCodeChange.bind(this)}
           options={{ mode: 'javascript' }} />
       </div>
     );
   }
 }
 
-export default Editor;
+function mapStateToProps({code}) {
+  return { code };
+}
+
+export default connect(mapStateToProps, actions)(Editor);

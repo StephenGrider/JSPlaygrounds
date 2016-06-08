@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { transform } from 'babel-standalone';
 import esprima from 'esprima';
@@ -97,11 +98,15 @@ class Viewer extends Component {
 
   render() {
     return (
-      <div className="viewer col-xs-5">
+      <div className="viewer">
         {this.renderExpressions(this.props.code)}
       </div>
     );
   }
 }
 
-export default Viewer;
+function mapStateToProps({ code }){
+  return { code };
+}
+
+export default connect(mapStateToProps)(Viewer);

@@ -36,6 +36,8 @@
     "react-dom": "^0.14.3",
     "react-redux": "^4.0.0",
     "react-router": "^2.0.1",
-    "redux": "^3.0.4"
+    "react-split-pane": "^0.1.42",
+    "redux": "^3.0.4",
+    "reselect": "^2.5.1"
   }
 }
