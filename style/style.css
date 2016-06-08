@@ -1,6 +1,11 @@
 .viewer {
 	border: 1px solid #ccc;
 	height: calc(100vh - 10px);
+	position: relative;
+}
+
+.viewer .expression {
+	position: absolute;
 }
 
 body {

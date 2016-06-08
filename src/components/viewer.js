@@ -5,7 +5,6 @@ import esprima from 'esprima';
 
 window.React = React;
 window.Component = Component;
-window.esprima = esprima;
 
 const OPEN_DELIMITERS = [ '(', '{', '[', '`' ];
 const CLOSE_DELIMITERS = [ ')', '}', ']', '`' ];
@@ -28,7 +27,7 @@ class Viewer extends Component {
   }
 
   buildExpressions(code) {
-    const transformedCode = JSXTransformer.transform(code).code;
+    const transformedCode = transform(code, { presets: ['react']}).code;
     const codeByLine = transformedCode.split('\n');
     const tokenized = esprima.tokenize(transformedCode, { loc: true });
 
@@ -67,12 +66,11 @@ class Viewer extends Component {
       return expressions;
     }, {});
 
-    console.log(exp);
     return exp;
   }
 
   evaluateExpressions(expressions) {
-    const exp = _.map(expressions, expression => {
+    const formattedExpressions = _.mapValues(expressions, expression => {
       const result = eval(expression);
 
       if (result && result.type) {
@@ -81,14 +79,16 @@ class Viewer extends Component {
         return <i>Function {result.name}</i>;
       } else if (_.isBoolean(result)) {
         return result ? 'True' : 'False';
-      } else if (_.isObject(result)) {
+      } else if (_.isObject(result) || _.isArray(result)) {
         return JSON.stringify(result);
       }
 
       return result;
     });
 
-    return exp.map(e => <div>{e}</div>)
+    return _.map(formattedExpressions, (expression, line) =>
+      <div>{expression}</div>
+    );
   }
 
   renderExpressions(code) {
