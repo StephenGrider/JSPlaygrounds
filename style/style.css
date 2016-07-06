@@ -6,6 +6,11 @@ body {
   padding: 0;
 }
 
+.errors {
+  white-space: pre;
+  color: red;
+}
+
 .ReactCodeMirror {
   border: 1px solid #ccc;
 }

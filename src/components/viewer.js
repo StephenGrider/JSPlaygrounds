@@ -2,18 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import parseExpressions from 'selectors/parse_expressions';
-
-window.React = React;
-window.Component = Component;
-
-const OPEN_DELIMITERS = [ '(', '{', '[', '`' ];
-const CLOSE_DELIMITERS = [ ')', '}', ']', '`' ];
-const DELIMITER_MAP = {
-  ')': '(',
-  '}': '{',
-  ']': '[',
-  '`': '`'
-};
+import SplitPane from 'react-split-pane';
 
 class Viewer extends Component {
   evaluateExpressions(expressions) {
@@ -43,16 +32,31 @@ class Viewer extends Component {
   }
 
   render() {
+    const defaultHeight = window.innerHeight / 1.3;
+
     return (
-      <div className="viewer">
-        {this.renderExpressions(this.props.code)}
-      </div>
+      <SplitPane split="horizontal" defaultSize={defaultHeight} className="viewer">
+        <div className="result">
+          {this.renderExpressions(this.props.code)}
+        </div>
+        <div className="errors">
+          {this.props.errors}
+        </div>
+      </SplitPane>
     );
   }
 }
 
 function mapStateToProps(state){
-  return { expressions: parseExpressions(state) };
+  let expressions, errors;
+
+  try {
+    expressions = parseExpressions(state);
+  } catch (e) {
+    errors = e.toString();
+  }
+
+  return { expressions, errors };
 }
 
 export default connect(mapStateToProps)(Viewer);

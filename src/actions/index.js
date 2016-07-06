@@ -3,8 +3,8 @@ import {
 } from 'actions/types';
 
 export function updateCode(code) {
-  localStorage.setItem('code', code);
-  
+  console.clear();
+
   return {
     type: DID_UPDATE_CODE,
     payload: code

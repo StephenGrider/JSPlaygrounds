@@ -1,6 +1,6 @@
 import { DID_UPDATE_CODE } from 'actions/types';
 
-const INITIAL_STATE = localStorage.getItem('code') || '';
+const INITIAL_STATE = '';
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {

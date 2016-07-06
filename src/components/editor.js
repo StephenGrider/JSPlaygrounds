@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import CodeMirror from 'react-codemirror';
 import 'codemirror/mode/javascript/javascript';
@@ -15,7 +16,7 @@ class Editor extends Component {
         <CodeMirror
           value={this.props.code}
           onChange={this.onCodeChange.bind(this)}
-          options={{ mode: 'javascript' }} />
+          options={{ mode: 'javascript', lineNumbers: true, tabSize: 2 }} />
       </div>
     );
   }

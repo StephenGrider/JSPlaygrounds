@@ -56,6 +56,7 @@ const parseExpressions = (code) => {
     return expressions;
   }, {});
 
+  eval(transformedCode);
   return exp;
 }
 

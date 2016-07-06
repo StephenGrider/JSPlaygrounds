@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
+import SplitPane from 'react-split-pane';
 import Editor from './editor';
 import Viewer from './viewer';
-import SplitPane from 'react-split-pane';
+import ErrorConsole from './error_console';
 
 export default class App extends Component {
   render() {
-    const defaultWidth = document.body.clientWidth / 2;
+    const width = window.innerHeight / 2;
+
     return (
-      <SplitPane split="vertical" defaultSize={defaultWidth}>
+      <SplitPane split="vertical" defaultSize={width}>
         <Editor />
-        <Viewer />
+        <div>
+          <Viewer />
+          {/*<ErrorConsole />*/}
+        </div>
       </SplitPane>
     );
   }
