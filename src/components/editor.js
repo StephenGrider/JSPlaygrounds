@@ -16,7 +16,7 @@ class Editor extends Component {
         <CodeMirror
           value={this.props.code}
           onChange={this.onCodeChange.bind(this)}
-          options={{ mode: 'javascript', lineNumbers: true, tabSize: 2 }} />
+          options={{ mode: 'jsx', lineNumbers: true, tabSize: 2 }} />
       </div>
     );
   }
