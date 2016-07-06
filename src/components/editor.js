@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import CodeMirror from 'react-codemirror';
-import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/jsx/jsx';
 import * as actions from 'actions';
 import { connect } from 'react-redux';
 
@@ -16,7 +16,7 @@ class Editor extends Component {
         <CodeMirror
           value={this.props.code}
           onChange={this.onCodeChange.bind(this)}
-          options={{ mode: 'javascript', lineNumbers: true, tabSize: 2 }} />
+          options={{ mode: 'jsx', lineNumbers: true, tabSize: 2 }} />
       </div>
     );
   }
