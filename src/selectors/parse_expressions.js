@@ -12,6 +12,7 @@ const DELIMITER_MAP = {
   ']': '[',
   '`': '`'
 };
+const VARIABLE_IDENTIFIERS = ['var', 'const', 'let'];
 
 const findDelimiters = ({ column }, lineContents) =>
   _.intersection(_.takeRight(lineContents, lineContents.length - column), OPEN_DELIMITERS).length
@@ -23,6 +24,7 @@ const parseExpressions = (code) => {
 
   const parens = { '(': 0, '{': 0, '[': 0 };
   let wasOpen = false;
+  let isVariableInitialization = false;
   const exp = _.reduce(tokenized, (expressions, { value, loc: { end } }, index) => {
     const lineNumber = end.line;
     const lineContents = codeByLine[lineNumber - 1];
@@ -40,6 +42,10 @@ const parseExpressions = (code) => {
       parens[DELIMITER_MAP[value]] -= 1;
     }
 
+    if (VARIABLE_IDENTIFIERS.includes(value)) {
+      isVariableInitialization = true;
+    }
+
     if (!lineHasMoreDelimiters && wasOpen && _.every(parens, count => count === 0)) {
       wasOpen = false;
       expressions[lineNumber] = _.take(codeByLine, lineNumber).join('\n');
@@ -48,7 +54,11 @@ const parseExpressions = (code) => {
     }
 
     if (!lineHasMoreDelimiters && _.every(parens, count => count === 0)) {
-      expressions[lineNumber] = _.take(codeByLine, lineNumber).join('\n');
+      if (!isVariableInitialization) {
+        expressions[lineNumber] = _.take(codeByLine, lineNumber).join('\n');
+      } else if(endOfLine || value === ';') {
+        isVariableInitialization = false;
+      }
 
       return expressions;
     }
