@@ -40,17 +40,9 @@ const parseExpressions = (code) => {
       parens[DELIMITER_MAP[value]] -= 1;
     }
 
-    if (!lineHasMoreDelimiters && wasOpen && _.every(parens, count => count === 0)) {
+    if (!lineHasMoreDelimiters && _.every(parens, count => count === 0)) {
       wasOpen = false;
       expressions[lineNumber] = _.take(codeByLine, lineNumber).join('\n');
-
-      return expressions;
-    }
-
-    if (!lineHasMoreDelimiters && _.every(parens, count => count === 0)) {
-      expressions[lineNumber] = _.take(codeByLine, lineNumber).join('\n');
-
-      return expressions;
     }
 
     return expressions;
