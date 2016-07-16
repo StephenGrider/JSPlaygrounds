@@ -27,7 +27,7 @@ class Viewer extends Component {
     });
 
     return _.map(formattedExpressions, (expression, line) =>
-      <div>{expression}</div>
+      <div key={line}>{expression}</div>
     );
   }
 
