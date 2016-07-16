@@ -1,8 +1,12 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import parseExpressions from 'selectors/parse_expressions';
 import SplitPane from 'react-split-pane';
+import { local } from 'store2';
+
+import parseExpressions from 'selectors/parse_expressions';
+
+const storedSizeErrosPane = local.get('size_errors_pane');
 
 class Viewer extends Component {
   evaluateExpressions(expressions) {
@@ -32,10 +36,16 @@ class Viewer extends Component {
   }
 
   render() {
-    const defaultHeight = window.innerHeight / 1.3;
+    const defaultHeight = storedSizeErrosPane || window.innerHeight * 0.25;
 
     return (
-      <SplitPane split="horizontal" defaultSize={defaultHeight} className="viewer">
+      <SplitPane
+        split="horizontal"
+        defaultSize={defaultHeight}
+        className="viewer"
+        primary="second"
+        onChange={local.set.bind(local, 'size_errors_pane')}
+      >
         <div className="result">
           {this.renderExpressions(this.props.code)}
         </div>
