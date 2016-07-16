@@ -22,9 +22,24 @@ class Viewer extends Component {
       return result;
     });
 
-    return _.map(formattedExpressions, (expression, line) =>
-      <div>{expression}</div>
+    const lineNumberLength = _.reduce(
+      _.keys(formattedExpressions),
+      (len, line) => line.length > len ? line.length : len,
+      0
     );
+
+    return _.map(formattedExpressions, (expression, line) => {
+      const lineString = _.padStart(line.toString(), lineNumberLength, '\u00A0');
+      if(expression){
+        return(
+          <div className="result__line">
+            <div className="result___line-number">{lineString}</div>
+            <div className="result___expression">{expression}</div>
+          </div>
+        );
+      }
+      return ;
+    });
   }
 
   renderExpressions(code) {

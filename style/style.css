@@ -405,3 +405,34 @@ cursor: not-allowed;
 Resizer.disabled:hover {
 border-color: transparent;
 }
+
+/* result */
+.result{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.result__line{
+  display: flex;
+}
+
+.result__line:last-child{
+  flex: 1;
+}
+
+.result___line-number{
+  border-right: 1px solid #ddd;
+  background-color: #f7f7f7;
+  white-space: nowrap;
+  font-family: monospace;
+  padding: 0 3px 0 5px;
+  color: #999;
+  min-width: 30px;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.result___expression{
+  flex: 1;
+}

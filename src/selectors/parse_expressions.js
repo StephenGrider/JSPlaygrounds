@@ -17,7 +17,10 @@ const findDelimiters = ({ column }, lineContents) =>
   _.intersection(_.takeRight(lineContents, lineContents.length - column), OPEN_DELIMITERS).length
 
 const parseExpressions = (code) => {
-  const transformedCode = transform(code, { presets: ['react']}).code;
+  const transformedCode = transform(code, {
+    presets: ['react'],
+    retainLines: true
+  }).code;
   const codeByLine = transformedCode.split('\n');
   const tokenized = esprima.tokenize(transformedCode, { loc: true });
 
