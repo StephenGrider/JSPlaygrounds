@@ -38,6 +38,7 @@
     "react-router": "^2.0.1",
     "react-split-pane": "^0.1.42",
     "redux": "^3.0.4",
-    "reselect": "^2.5.1"
+    "reselect": "^2.5.1",
+    "store2": "^2.3.2"
   }
 }
