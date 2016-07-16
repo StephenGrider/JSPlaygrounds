@@ -4,10 +4,13 @@ import CodeMirror from 'react-codemirror';
 import 'codemirror/mode/jsx/jsx';
 import * as actions from 'actions';
 import { connect } from 'react-redux';
+import { local } from 'store2';
 
 class Editor extends Component {
   onCodeChange(code) {
     this.props.updateCode(code);
+    // save code in localStorage
+    local.set('code', code);
   }
 
   render() {
