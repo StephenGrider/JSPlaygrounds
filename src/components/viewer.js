@@ -9,7 +9,7 @@ class Viewer extends Component {
     const formattedExpressions = _.mapValues(expressions, expression => {
       const result = eval(expression);
 
-      if (result && result.type) {
+      if (result && result.type && result.props) {
         return result;
       } else if (_.isFunction(result) && result.name) {
         return <i>Function {result.name}</i>;
@@ -22,8 +22,9 @@ class Viewer extends Component {
       return result;
     });
 
-    return _.map(formattedExpressions, (expression, line) =>
-      <div>{expression}</div>
+    return _.map(formattedExpressions, (expression, line) => {
+      console.log(expression);
+      return <div>{expression}</div>}
     );
   }
 
