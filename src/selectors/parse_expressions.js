@@ -4,6 +4,7 @@ import { transform } from 'babel-standalone';
 import esprima from 'esprima';
 
 const codeSelector = state => state.code;
+const CONSOLE_LOG_REGEXP = /console\.log\(([^)]+)\)/g;
 const OPEN_DELIMITERS = [ '(', '{', '[', '`' ];
 const CLOSE_DELIMITERS = [ ')', '}', ']', '`' ];
 const DELIMITER_MAP = {
@@ -57,7 +58,10 @@ const parseExpressions = (code) => {
   }, {});
 
   eval(transformedCode);
-  return exp;
+  
+  return _.mapValues(exp, e => e.replace(CONSOLE_LOG_REGEXP, (match, contents) => {
+    return contents.replace(',', '+');
+  }));
 }
 
 export default createSelector(
