@@ -55,8 +55,8 @@ const parseExpressions = (code) => {
 
     return expressions;
   }, {});
-
-  eval(transformedCode);
+  const evalNoScope = eval.bind();
+  evalNoScope(transformedCode);
   return exp;
 }
 
