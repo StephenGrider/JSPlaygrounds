@@ -1,6 +1,6 @@
 import {
   DID_UPDATE_CODE
-} from 'actions/types';
+} from './types';
 
 export function updateCode(code) {
   console.clear();

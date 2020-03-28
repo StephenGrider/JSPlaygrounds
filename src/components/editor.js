@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import CodeMirror from 'react-codemirror';
 import 'codemirror/mode/jsx/jsx';
-import * as actions from 'actions';
+import * as actions from '../actions';
 import { connect } from 'react-redux';
 
 class Editor extends Component {

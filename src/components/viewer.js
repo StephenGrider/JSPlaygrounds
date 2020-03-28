@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import parseExpressions from 'selectors/parse_expressions';
+import parseExpressions from '../selectors/parse_expressions';
 import SplitPane from 'react-split-pane';
 
 class Viewer extends Component {
