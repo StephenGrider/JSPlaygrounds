@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { transform } from 'babel-standalone';
-import esprima from 'esprima';
+// import esprima from 'esprima';
+
 
 const codeSelector = state => state.code;
 const OPEN_DELIMITERS = [ '(', '{', '[', '`' ];
@@ -18,7 +19,9 @@ const findDelimiters = ({ column }, lineContents) =>
 
 const parseExpressions = (code) => {
   const transformedCode = transform(code, { presets: ['react']}).code;
+  console.log("transformedCode", transformedCode);
   const codeByLine = transformedCode.split('\n');
+  console.log("codeByLine", codeByLine);
   const tokenized = esprima.tokenize(transformedCode, { loc: true });
 
   const parens = { '(': 0, '{': 0, '[': 0 };
