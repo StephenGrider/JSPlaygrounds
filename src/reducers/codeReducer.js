@@ -1,4 +1,4 @@
-import { DID_UPDATE_CODE } from 'actions/types';
+import { DID_UPDATE_CODE } from '../actions/types';
 
 const INITIAL_STATE = '';
 
